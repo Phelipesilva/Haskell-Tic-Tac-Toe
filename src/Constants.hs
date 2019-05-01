@@ -21,14 +21,18 @@ o = snd(players)
 
 -- Rows
 r1 :: Match
-r1 = [empty, empty, empty]
+r1 = [empty, x, empty]
 
 r2 :: Match
-r2 = [empty, empty, empty]
+r2 = [empty, x, empty]
 
 r3 :: Match
-r3 = [empty, empty, empty]
+r3 = [empty, x, empty]
 
 -- Board
 board :: Board
 board = [ r1, r2, r3 ]
+
+-- Auxiliar Board
+auxBoard :: Board
+auxBoard = [ [1 , 2 , 3], [4, 5, 6], [7, 8, 9] ]
