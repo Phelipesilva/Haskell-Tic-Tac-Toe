@@ -10,6 +10,9 @@ type Empty = Int
 -- Value: Player or Empty
 type Value = Int
 
+-- Position
+type Position = Int
+
 -- Players: O (1) and X (0)
 type Players = ( Player, Player )
 

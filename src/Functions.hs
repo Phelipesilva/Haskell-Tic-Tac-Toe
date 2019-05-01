@@ -13,6 +13,13 @@ getRow board row = board !! row
 getColumn :: Board -> Int -> Match
 getColumn board column = [ ((board !! 0) !! column), ((board !! 1) !! column), ((board !! 2) !! column) ]
 
+-- Get Column of position 
+getRealColumn :: Position -> Position
+getRealColumn position
+    | position == 1 || position == 4 || position == 7 = 0
+    | position == 2 || position == 5 || position == 8 = 1
+    | position == 3 || position == 6 || position == 9 = 2
+
 -- Get Diagonals: (1) -> 1 5 9, (2) -> 7 5 3
 getDiagonal :: Board -> Int -> Match
 getDiagonal board diagonal
@@ -21,19 +28,29 @@ getDiagonal board diagonal
 
 -- Checking successfull match
 itsAMatch :: Match -> Value
-itsAMatch row 
-    | sum(row) == 3 = x 
-    | sum(row) == 0 = o
+itsAMatch match 
+    | sum(match) == 3 = x 
+    | sum(match) == 0 = o
     | otherwise = -1
--- | empty `elem` row = empty
 
 -- Checking winner
-hasWinner :: Board -> Player
+hasWinner :: Board -> Value
 hasWinner board
     | itsAMatch (getRow board 0) == x || itsAMatch (getRow board 1) == x || itsAMatch (getRow board 2) == x = x
     | itsAMatch (getRow board 0) == o || itsAMatch (getRow board 1) == o || itsAMatch (getRow board 2) == o = o
     | itsAMatch (getColumn board 0) == x || itsAMatch (getColumn board 1) == x || itsAMatch (getColumn board 2) == x = x
     | itsAMatch (getColumn board 0) == o || itsAMatch (getColumn board 1) == o || itsAMatch (getColumn board 2) == o = o
-    | itsAMatch (getDiagonal board 0) == x || itsAMatch (getDiagonal board 1) == x = x
-    | itsAMatch (getDiagonal board 0) == o || itsAMatch (getDiagonal board 1) == o = o
+    | itsAMatch (getDiagonal board 1) == x || itsAMatch (getDiagonal board 1) == x = x
+    | itsAMatch (getDiagonal board 2) == o || itsAMatch (getDiagonal board 1) == o = o
     | otherwise = -1
+
+-- Make a move
+makeAMove :: Match -> Position -> Player -> Match
+makeAMove row position player = take position (row) ++ [player] ++ drop (position + 1) (row)
+
+-- Play
+play :: Board -> Player -> Position -> Board
+play board player position
+    | position <= 3 = [ (makeAMove (getRow board 0) (getRealColumn position) player), (getRow board 1), (getRow board 2) ]
+    | position <= 6 = [ (getRow board 0), (makeAMove (getRow board 1) (getRealColumn position) player), (getRow board 2) ]
+    | position <= 9 = [ (getRow board 0), (getRow board 1), makeAMove (getRow board 2) (getRealColumn position) player ]
