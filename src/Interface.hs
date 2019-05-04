@@ -4,6 +4,7 @@ module Interface where
 -- Imports
 import Types 
 import Functions
+import Constants
 
 getValidPosition :: String -> Position
 getValidPosition input
@@ -18,10 +19,10 @@ getValidPosition input
     | input == "9" = 9
     | otherwise = -1
 
--- playing :: IO -> Board -> Value
--- playing position board
---     | position > -1 = playing getLine board 
---     | otherwise = playing position board
+playing :: Board -> Player -> Position -> Board
+playing board player position
+    | (hasWinner (play board player position) /= (-1)) = playing (play board player position) player position
+    | otherwise = board
 
 getCharPlayer :: Value -> String
 getCharPlayer player
@@ -45,6 +46,7 @@ drawBoard board = do
     putStrLn $ (drawRow board 2)
 
 -- Auxiliar Board
+
 drawAuxPosition :: Board -> Position -> Position -> Int
 drawAuxPosition board row column = ((getRow board row) !! column)
 

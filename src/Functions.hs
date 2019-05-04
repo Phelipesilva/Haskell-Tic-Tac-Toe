@@ -29,8 +29,8 @@ getDiagonal board diagonal
 -- Checking successfull match
 itsAMatch :: Match -> Value
 itsAMatch match 
-    | sum(match) == 3 = x 
-    | sum(match) == 0 = o
+    | sum(match) == 3 && not (empty `elem` match) = x 
+    | sum(match) == 0 && not (empty `elem` match) = o
     | otherwise = -1
 
 -- Checking winner
@@ -54,3 +54,8 @@ play board player position
     | position <= 3 = [ (makeAMove (getRow board 0) (getRealColumn position) player), (getRow board 1), (getRow board 2) ]
     | position <= 6 = [ (getRow board 0), (makeAMove (getRow board 1) (getRealColumn position) player), (getRow board 2) ]
     | position <= 9 = [ (getRow board 0), (getRow board 1), makeAMove (getRow board 2) (getRealColumn position) player ]
+
+
+-- Clear Console
+clear :: IO()
+clear = putStr "\ESC[2J"
