@@ -19,10 +19,36 @@ getValidPosition input
     | input == "9" = 9
     | otherwise = -1
 
-playing :: Board -> Player -> Position -> Board
-playing board player position
-    | (hasWinner (play board player position) /= (-1)) = playing (play board player position) player position
-    | otherwise = board
+getPlayer :: Int -> Player
+getPlayer round 
+    | round `mod` 2 == 0 = x
+    | otherwise = o
+
+start :: Board -> Int -> IO()
+start board round = do    
+    -- clear
+    drawBoard board
+    let player = getPlayer round
+    putStrLn $ "Vez de : " ++ (getCharPlayer player)
+
+    putStr "Infome a posição: "
+    position <- getLine
+
+    let valid = (getValidPosition position)
+    if(valid /= -1) then do
+        let newB = play board player valid
+
+        let winner = hasWinner newB
+
+        if(winner == -1) then do
+            start newB (round+1)
+        else do
+            clear
+            putStrLn $ "O vencedor é: " ++ (getCharPlayer winner)
+            drawBoard newB
+            return();
+    else do
+        start board round
 
 getCharPlayer :: Value -> String
 getCharPlayer player
