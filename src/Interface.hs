@@ -6,17 +6,23 @@ import Types
 import Functions
 import Constants
 
-getValidPosition :: String -> Position
-getValidPosition input
-    | input == "1" = 1
-    | input == "2" = 2
-    | input == "3" = 3
-    | input == "4" = 4
-    | input == "5" = 5
-    | input == "6" = 6
-    | input == "7" = 7
-    | input == "8" = 8
-    | input == "9" = 9
+verifyPositions :: Int -> [Int] -> Bool
+verifyPositions n xs
+  | n == head xs = False
+  | length xs > 1 = verifyPositions n (tail xs)
+  | otherwise = True
+
+getValidPosition :: String -> [Int] -> Position
+getValidPosition input positions
+    | input == "1" && verifyPositions 1 positions = 1
+    | input == "2" && verifyPositions 2 positions = 2
+    | input == "3" && verifyPositions 3 positions = 3
+    | input == "4" && verifyPositions 4 positions = 4
+    | input == "5" && verifyPositions 5 positions = 5
+    | input == "6" && verifyPositions 6 positions = 6
+    | input == "7" && verifyPositions 7 positions = 7
+    | input == "8" && verifyPositions 8 positions = 8
+    | input == "9" && verifyPositions 9 positions = 9
     | otherwise = -1
 
 getPlayer :: Int -> Player
@@ -24,31 +30,32 @@ getPlayer round
     | round `mod` 2 == 0 = x
     | otherwise = o
 
-start :: Board -> Int -> IO()
-start board round = do    
-    -- clear
+start :: Board -> Int-> [Int] -> IO()
+start board round positions= do
     drawBoard board
     let player = getPlayer round
-    putStrLn $ "Vez de : " ++ (getCharPlayer player)
-
-    putStr "Infome a posição: "
+    putStrLn "\n------------------------------"
+    drawAuxBoard auxBoard
+    putStrLn $ "\nVez de : " ++ (getCharPlayer player)
+    putStr "> Infome a posição: "
     position <- getLine
-
-    let valid = (getValidPosition position)
+    putStr "\n"
+    let valid = (getValidPosition position positions)
     if(valid /= -1) then do
         let newB = play board player valid
 
         let winner = hasWinner newB
 
         if(winner == -1) then do
-            start newB (round+1)
+            start newB (round+1) (valid:positions)
         else do
             clear
             putStrLn $ "O vencedor é: " ++ (getCharPlayer winner)
             drawBoard newB
             return();
     else do
-        start board round
+        putStrLn $ "\nPosição inválida - porfavor digite outra\n"
+        start board round positions
 
 getCharPlayer :: Value -> String
 getCharPlayer player
