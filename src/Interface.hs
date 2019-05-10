@@ -25,29 +25,83 @@ getValidPosition input positions
     | input == "9" && verifyPositions 9 positions = 9
     | otherwise = -1
 
+verifyPositionWinner :: [Int] -> String
+verifyPositionWinner positions
+    | verifyPositions 1 positions && verifyPositions 4 positions = "6"
+    | verifyPositions 1 positions && verifyPositions 6 positions = "4"
+    | verifyPositions 4 positions && verifyPositions 6 positions = "1"
+    | verifyPositions 2 positions && verifyPositions 5 positions = "8"
+    | verifyPositions 2 positions && verifyPositions 8 positions = "5"
+    | verifyPositions 5 positions && verifyPositions 8 positions = "2"
+    | verifyPositions 3 positions && verifyPositions 6 positions = "9"
+    | verifyPositions 3 positions && verifyPositions 9 positions = "6"
+    | verifyPositions 6 positions && verifyPositions 9 positions = "3"
+    | verifyPositions 1 positions && verifyPositions 2 positions = "3"
+    | verifyPositions 1 positions && verifyPositions 3 positions = "2"
+    | verifyPositions 2 positions && verifyPositions 3 positions = "1"
+    | verifyPositions 4 positions && verifyPositions 5 positions = "6"
+    | verifyPositions 4 positions && verifyPositions 6 positions = "5"
+    | verifyPositions 5 positions && verifyPositions 6 positions = "4"
+    | verifyPositions 7 positions && verifyPositions 8 positions = "9"
+    | verifyPositions 7 positions && verifyPositions 9 positions = "8"
+    | verifyPositions 8 positions && verifyPositions 9 positions = "7"
+    | verifyPositions 1 positions && verifyPositions 5 positions = "9"
+    | verifyPositions 1 positions && verifyPositions 9 positions = "5"
+    | verifyPositions 5 positions && verifyPositions 9 positions = "1"
+    | verifyPositions 3 positions && verifyPositions 5 positions = "7"
+    | verifyPositions 3 positions && verifyPositions 7 positions = "5"
+    | verifyPositions 5 positions && verifyPositions 7 positions = "3"
+    | otherwise = "-1"
+
+verifyCorner :: [Int] -> String
+verifyCorner positions
+    | verifyPositions 1 positions = "1"
+    | verifyPositions 3 positions = "3"
+    | verifyPositions 7 positions = "7"
+    | verifyPositions 9 positions = "9"
+    | otherwise = "-1"
+
+gerateCPUPosition :: [Int]-> [Int] -> String
+gerateCPUPosition positionsX positionsO
+    | verifyPositionWinner positionsX /= "-1" = verifyPositionWinner positionsX
+    | verifyPositionWinner positionsO /= "-1" = verifyPositionWinner positionsO
+    | verifyCorner positionsX++positionsO /="-1" = verifyCorner (positionsX++positionsO)
+    | otherwise = "-1"
+
+
 getPlayer :: Int -> Player
 getPlayer round 
     | round `mod` 2 == 0 = x
     | otherwise = o
 
-start :: Board -> Int-> [Int] -> IO()
-start board round positions= do
+geratePosition ::[Int] -> [Int] -> Int -> Player -> String
+geratePosition positionsX positionsO round player =
+    if (mod round 2 /= 0) then do
+        putStrLn "\n------------------------------"
+        drawAuxBoard auxBoard
+        putStrLn $ "\nVez de : " ++ (getCharPlayer player)
+        putStr "> Infome a posição: "
+        position <- getLine
+        putStr "\n"
+        position
+    else do
+        gerateCPUPosition positionsX positionsO
+
+start :: Board -> Int-> [Int] -> [Int] -> IO()
+start board round positionsX positionsO = do
     drawBoard board
     let player = getPlayer round
-    putStrLn "\n------------------------------"
-    drawAuxBoard auxBoard
-    putStrLn $ "\nVez de : " ++ (getCharPlayer player)
-    putStr "> Infome a posição: "
-    position <- getLine
-    putStr "\n"
-    let valid = (getValidPosition position positions)
+
+    let position = geratePosition positionsX positionsO round player
+    let valid = (getValidPosition position (positionsX++positionsO))
+        
     if(valid /= -1) then do
         let newB = play board player valid
 
         let winner = hasWinner newB
 
         if(winner == -1) then do
-            start newB (round+1) (valid:positions)
+            start newB (round+1) positionsX positionsO
         else do
             clear
             putStrLn $ "O vencedor é: " ++ (getCharPlayer winner)
@@ -55,7 +109,7 @@ start board round positions= do
             return();
     else do
         putStrLn $ "\nPosição inválida - porfavor digite outra\n"
-        start board round positions
+        start board round positionsX positionsO
 
 getCharPlayer :: Value -> String
 getCharPlayer player
