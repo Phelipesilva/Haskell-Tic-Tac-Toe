@@ -2,8 +2,12 @@ import Constants
 import Functions
 import Interface
  
-main = do
+playagain = do
     putStrLn "-- Bem vindo ao HaskellTicTacToe --"
-    start board 0 [-1] [-1]
+    start board 1 [-1] [-1]
     return()
 
+play = do
+    putStrLn "-- Bem vindo ao HaskellTicTacToe --"
+    start board 1 [-1] [-1]
+    return()

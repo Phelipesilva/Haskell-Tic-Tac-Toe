@@ -24,7 +24,7 @@ getRealColumn position
 getDiagonal :: Board -> Int -> Match
 getDiagonal board diagonal
     | diagonal == 1 = [ ((getColumn board 0) !! 0), ((getColumn board 1) !! 1), ((getColumn board 2) !! 2) ]
-    | diagonal == 2 = [ ((getColumn board 2) !! 2), ((getColumn board 1) !! 1), ((getColumn board 0) !! 0) ]
+    | diagonal == 2 = [ ((getColumn board 2) !! 0), ((getColumn board 1) !! 1), ((getColumn board 0) !! 2) ]
 
 -- Checking successfull match
 itsAMatch :: Match -> Value
@@ -40,7 +40,7 @@ hasWinner board
     | itsAMatch (getRow board 0) == o || itsAMatch (getRow board 1) == o || itsAMatch (getRow board 2) == o = o
     | itsAMatch (getColumn board 0) == x || itsAMatch (getColumn board 1) == x || itsAMatch (getColumn board 2) == x = x
     | itsAMatch (getColumn board 0) == o || itsAMatch (getColumn board 1) == o || itsAMatch (getColumn board 2) == o = o
-    | itsAMatch (getDiagonal board 1) == x || itsAMatch (getDiagonal board 1) == x = x
+    | itsAMatch (getDiagonal board 1) == x || itsAMatch (getDiagonal board 2) == x = x
     | itsAMatch (getDiagonal board 2) == o || itsAMatch (getDiagonal board 1) == o = o
     | otherwise = -1
 
