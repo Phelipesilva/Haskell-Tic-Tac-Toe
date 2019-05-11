@@ -62,9 +62,10 @@ verifyPositionWinner positions marcado
 verifyCorner :: [Int] -> String
 verifyCorner positions
     | (verifyPositions 1 positions || verifyPositions 5 positions || verifyPositions 3 positions || verifyPositions 9 positions) && verifyPositions 5 positions = "5"
+    | ((verifyPositions 1 positions && verifyPositions 9 positions) || (verifyPositions 3 positions || verifyPositions 7 positions)) && verifyPositions 8 positions = "8"
     | verifyPositions 1 positions = "1"
-    | verifyPositions 3 positions = "3"
     | verifyPositions 7 positions = "7"
+    | verifyPositions 3 positions = "3"
     | verifyPositions 9 positions = "9"
     | otherwise = "-1"
 
