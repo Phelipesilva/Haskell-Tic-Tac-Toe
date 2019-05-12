@@ -59,21 +59,22 @@ verifyPositionWinner positions marcado
     | verifyPositionsV2 5 positions && verifyPositionsV2 7 positions && verifyPositions 3 marcado = "3"
     | otherwise = "-1"
 
-verifyCorner :: [Int] -> String
-verifyCorner positions
-    | (verifyPositions 1 positions || verifyPositions 5 positions || verifyPositions 3 positions || verifyPositions 9 positions) && verifyPositions 5 positions = "5"
-    | ((verifyPositions 1 positions && verifyPositions 9 positions) || (verifyPositions 3 positions || verifyPositions 7 positions)) && verifyPositions 8 positions = "8"
-    | verifyPositions 1 positions = "1"
-    | verifyPositions 7 positions = "7"
-    | verifyPositions 3 positions = "3"
-    | verifyPositions 9 positions = "9"
+verifyCorner :: [Int]-> [Int] -> String
+verifyCorner positionsX positionsO
+    | (verifyPositionsV2 1 positionsO || verifyPositionsV2 7 positionsO || verifyPositionsV2 3 positionsO || verifyPositionsV2 9 positionsO) && verifyPositions 5 (positionsX++positionsO) = "5"
+    | (verifyPositionsV2 1 positionsO || verifyPositionsV2 9 positionsO) &&  verifyPositions 6 (positionsX++positionsO) && verifyPositionsV2 5 positionsX = "6"
+    | (verifyPositionsV2 3 positionsO || verifyPositionsV2 7 positionsO) &&  verifyPositions 4 (positionsX++positionsO) && verifyPositionsV2 5 positionsX = "4"
+    | verifyPositions 1 (positionsO++positionsX) = "1"
+    | verifyPositions 7 (positionsO++positionsX) = "7"
+    | verifyPositions 3 (positionsO++positionsX) = "3"
+    | verifyPositions 9 (positionsO++positionsX) = "9"
     | otherwise = "-1"
 
 gerateCPUPosition :: [Int]-> [Int] -> String
 gerateCPUPosition positionsX positionsO
     | (verifyPositionWinner positionsX positionsO) /= "-1" = verifyPositionWinner positionsX positionsO
     | (verifyPositionWinner positionsO positionsX) /= "-1" = verifyPositionWinner positionsO positionsX
-    | (verifyCorner (positionsX++positionsO)) /= "-1" = verifyCorner (positionsX++positionsO)
+    | (verifyCorner positionsX positionsO) /= "-1" = verifyCorner positionsX positionsO
     | otherwise = "-1"
 
 
