@@ -29,7 +29,7 @@ ___________
  7 | 8 | 9 
 
 Vez de :  O 
-\> Infome a posição: 
+> Infome a posição: 
 ```
 
 O jogador deve informar uma posição de 1 a 9.
